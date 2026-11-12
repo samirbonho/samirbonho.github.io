@@ -1,0 +1,11 @@
+{
+  "name": "Geotag",
+  "short_name": "Geotag",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f1f3f6",
+  "theme_color": "#1b2a41",
+  "icons": [
+    { "src": "icone.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

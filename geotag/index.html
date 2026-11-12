@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b2a41">
+  <title>Geotag</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icone.svg">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <h1>Geotag</h1>
+    <span id="badge-conexao" class="badge off">desconectado</span>
+  </header>
+
+  <main>
+    <!-- Aviso de navegador sem Bluetooth -->
+    <section id="aviso-navegador" class="cartao alerta" hidden>
+      <b>Este navegador não tem Bluetooth.</b>
+      Abra este link no <b>Chrome</b> do Android.
+    </section>
+
+    <!-- 1. Preparação: professor libera o gabarito -->
+    <section id="tela-prep" class="tela" hidden>
+      <div class="cartao">
+        <h2>Preparação</h2>
+        <p id="info-gabarito" class="sutil">Carregando gabarito…</p>
+        <label for="senha-prep">Senha do professor</label>
+        <input id="senha-prep" type="password" autocomplete="off">
+        <button id="btn-liberar" class="primario">Liberar jogo</button>
+        <p id="msg-prep" class="msg"></p>
+      </div>
+    </section>
+
+    <!-- 2. Conectar ao Arduino -->
+    <section id="tela-conectar" class="tela" hidden>
+      <div class="cartao">
+        <h2>Conectar ao Arduino</h2>
+        <p id="info-andamento" class="sutil"></p>
+        <p class="sutil">Ligue o Arduino e toque no botão. Escolha o módulo do seu grupo na lista.</p>
+        <button id="btn-conectar" class="primario">Conectar</button>
+        <p id="msg-conectar" class="msg"></p>
+      </div>
+    </section>
+
+    <!-- 3. Busca -->
+    <section id="tela-busca" class="tela" hidden>
+      <div class="placar">
+        <div><span class="rotulo">Grupo</span><b id="pl-grupo">-</b></div>
+        <div><span class="rotulo">Tag</span><b id="pl-tag">-</b></div>
+        <div><span class="rotulo">Tempo</span><b id="pl-tempo">00:00</b></div>
+        <div><span class="rotulo">Erros</span><b id="pl-erros">0</b></div>
+      </div>
+
+      <div id="cartao-status" class="cartao status">
+        <div id="st-emoji" class="st-emoji">📡</div>
+        <div id="st-nome" class="st-nome">Aguardando…</div>
+        <div id="st-direcao" class="st-direcao"></div>
+        <div id="st-dica" class="st-dica"></div>
+      </div>
+
+      <p id="info-gps" class="sutil centro">GPS: aguardando…</p>
+      <p id="msg-busca" class="msg centro"></p>
+
+      <div class="cartao">
+        <button id="btn-achei" class="primario" disabled>Achei! Digitar código</button>
+        <p id="info-achei" class="sutil centro">Chegue a menos de 15 m do tag para liberar.</p>
+        <form id="form-palpite" hidden>
+          <label for="inp-codigo">Palavra-código escrita no tag</label>
+          <input id="inp-codigo" autocomplete="off" autocapitalize="characters" maxlength="8">
+          <div class="linha">
+            <button type="submit" class="primario">Enviar</button>
+            <button type="button" id="btn-cancelar-palpite">Cancelar</button>
+          </div>
+          <p class="sutil">Cada código errado soma 1 minuto ao tempo.</p>
+        </form>
+      </div>
+
+      <button id="btn-reconectar" hidden>Reconectar</button>
+    </section>
+
+    <!-- 4. Resultado -->
+    <section id="tela-fim" class="tela" hidden>
+      <div class="cartao status" style="background:#2a9d8f">
+        <div class="st-emoji">🏆</div>
+        <div class="st-nome">Os dois tags foram encontrados!</div>
+      </div>
+      <div class="cartao">
+        <table class="resultado">
+          <tr><td>Grupo</td><td id="r-grupo"></td></tr>
+          <tr><td>Tempo cronometrado</td><td id="r-bruto"></td></tr>
+          <tr><td>Penalidades</td><td id="r-pen"></td></tr>
+          <tr><td><b>Tempo final</b></td><td id="r-final" class="destaque"></td></tr>
+          <tr><td>Divergências do Arduino</td><td id="r-div"></td></tr>
+        </table>
+        <p class="sutil">Comprovante (mostre ao professor):</p>
+        <p id="r-comprovante" class="comprovante"></p>
+        <p id="r-envio" class="msg"></p>
+        <details>
+          <summary>Detalhes das divergências</summary>
+          <ul id="r-div-lista" class="sutil"></ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- Painel do simulador (só com ?sim=G01) -->
+    <section id="painel-sim" class="cartao sim" hidden>
+      <h2>Simulador</h2>
+      <p class="sutil">Mover o celular simulado:</p>
+      <div class="grade-sim">
+        <span></span><button data-mover="N">N</button><span></span>
+        <button data-mover="O">O</button><select id="sim-passo"><option>5</option><option selected>25</option><option>100</option></select><button data-mover="L">L</button>
+        <span></span><button data-mover="S">S</button><span></span>
+      </div>
+      <div class="linha">
+        <button id="sim-perto">Ir para perto do tag</button>
+        <button id="sim-desconectar">Desconectar</button>
+        <button id="sim-reset">Resetar Arduino</button>
+      </div>
+      <p id="sim-info" class="sutil"></p>
+    </section>
+
+    <!-- Área do professor -->
+    <details class="cartao professor">
+      <summary>Área do professor</summary>
+      <label for="senha-prof">Senha</label>
+      <input id="senha-prof" type="password" autocomplete="off">
+      <div class="linha">
+        <button id="btn-novo-jogo">Novo jogo</button>
+        <button id="btn-apagar">Apagar tudo</button>
+      </div>
+      <p class="sutil">Novo jogo: zera o cronômetro e mantém o gabarito. Apagar tudo: remove também o gabarito deste celular.</p>
+      <p id="msg-prof" class="msg"></p>
+    </details>
+  </main>
+
+  <script type="module" src="js/jogo.js"></script>
+</body>
+</html>

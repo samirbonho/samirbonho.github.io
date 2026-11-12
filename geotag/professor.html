@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b2a41">
+  <title>Geotag — Professor</title>
+  <link rel="icon" href="icone.svg">
+  <link rel="stylesheet" href="css/estilo.css">
+  <style>
+    table.tags { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.tags th, table.tags td { padding: 6px 4px; border-bottom: 1px solid #e3e7ec; text-align: left; }
+    table.tags button { padding: 4px 8px; font-size: 13px; }
+    .contador { float: right; font-size: 12px; color: #5b6878; }
+    .ok-grupo { color: #1e8449; } .falta-grupo { color: #c0392b; }
+    progress { width: 100%; height: 14px; }
+  </style>
+</head>
+<body>
+  <header class="topo"><h1>Geotag — Professor</h1></header>
+  <main>
+
+    <section class="cartao">
+      <h2>1. Capturar a posição de um tag</h2>
+      <p class="sutil">Fique em cima do esconderijo, com o celular parado, e toque em "Capturar". A página faz a média das leituras de GPS por 15 segundos.</p>
+      <div class="linha">
+        <div style="flex:1"><label for="c-grupo">Grupo</label><input id="c-grupo" placeholder="G01" maxlength="6" autocapitalize="characters"></div>
+        <div style="flex:1"><label for="c-indice">Tag</label><select id="c-indice"><option value="1">1</option><option value="2">2</option></select></div>
+      </div>
+      <label for="c-codigo">Palavra-código (até 8 letras/números) <span id="cont-codigo" class="contador"></span></label>
+      <input id="c-codigo" maxlength="8" autocapitalize="characters" autocomplete="off">
+      <label for="c-dica">Dica bem-humorada (até 32 caracteres, sem acento) <span id="cont-dica" class="contador"></span></label>
+      <input id="c-dica" autocomplete="off">
+      <button id="btn-capturar" class="primario">Capturar posição (15 s)</button>
+      <progress id="c-progresso" max="15" value="0" hidden></progress>
+      <div class="linha">
+        <div style="flex:1"><label for="c-lat">Latitude</label><input id="c-lat" inputmode="decimal"></div>
+        <div style="flex:1"><label for="c-lon">Longitude</label><input id="c-lon" inputmode="decimal"></div>
+      </div>
+      <p id="c-info" class="sutil"></p>
+      <button id="btn-salvar" class="primario">Salvar tag</button>
+      <p id="msg-salvar" class="msg"></p>
+    </section>
+
+    <section class="cartao">
+      <h2>2. Tags capturados</h2>
+      <p id="resumo-grupos" class="sutil"></p>
+      <div style="overflow-x:auto"><table class="tags" id="tabela-tags"></table></div>
+      <div class="linha">
+        <button id="btn-exportar">Baixar backup</button>
+        <button id="btn-importar">Abrir backup</button>
+        <input id="arq-backup" type="file" accept=".json,application/json" hidden>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>3. Gerar o gabarito criptografado</h2>
+      <p class="sutil">Gera o arquivo <b>gabarito.enc</b>. Envie-o ao repositório no GitHub, substituindo o anterior.</p>
+      <label for="g-senha">Senha</label><input id="g-senha" type="password" autocomplete="new-password">
+      <label for="g-senha2">Repita a senha</label><input id="g-senha2" type="password" autocomplete="new-password">
+      <button id="btn-gerar" class="primario">Gerar e baixar gabarito.enc</button>
+      <p id="msg-gerar" class="msg"></p>
+    </section>
+
+    <section class="cartao">
+      <h2>4. Conferir o gabarito publicado</h2>
+      <p class="sutil">Abre o gabarito.enc que está no site e mostra o conteúdo.</p>
+      <label for="t-senha">Senha</label><input id="t-senha" type="password" autocomplete="off">
+      <button id="btn-testar" class="primario">Conferir</button>
+      <p id="msg-testar" class="msg"></p>
+      <ul id="lista-testar" class="sutil"></ul>
+    </section>
+
+    <section class="cartao">
+      <h2>5. Verificar um comprovante</h2>
+      <p class="sutil">Cole o comprovante mostrado no fim do jogo (ou recebido no Google Forms).</p>
+      <label for="v-senha">Senha</label><input id="v-senha" type="password" autocomplete="off">
+      <label for="v-comprovante">Comprovante</label><input id="v-comprovante" placeholder="G01|2026-...|1534|2|A1B2C3D4" autocomplete="off">
+      <button id="btn-verificar" class="primario">Verificar</button>
+      <p id="msg-verificar" class="msg"></p>
+    </section>
+
+  </main>
+  <script type="module" src="js/professor.js"></script>
+</body>
+</html>
